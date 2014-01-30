@@ -35,12 +35,16 @@ class HeroDeck(Resource):
         decks = cursor_to_dict(decks)
         for cs in [d['cards'] for d in decks]:
             for c in cs:
-                c['pic'] = self.get_image_url(c['id'])
+                self.setup_card(c)
         
         return decks
 
-    def get_image_url(self, id):
-        return mongo.db.card.find_one({"card_id": id})['picurl']
+    def setup_card(self, c):
+        card =  mongo.db.card.find_one({"card_id": c['id']})
+        if not card:
+            raise Exception("card_id %s not founded in card collection" % c['id'])
+        c['pic'] = card['picurl']
+        c['name'] = card['name']
         
 def register(api):
     api.add_resource(HeroDeck, '/hero_deck')

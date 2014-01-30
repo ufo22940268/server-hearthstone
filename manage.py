@@ -65,13 +65,14 @@ def get_encoded_page(url):
 def fetch_main_index():
     url = 'http://ls.duowan.com/'
     soup = get_encoded_page(url)
-    ml30s = soup.find('div', class_="mod-kazhu").find_all('div', class_="info ml30")
+    ml30s = soup.find('div', class_="mod-kazhu").find_all('div', class_="info")
 
     heros = []
     for ml30 in ml30s:
         hero = dict()
         hero_name = ml30.find('div', class_="tit").text.split()[0]
         hero['name'] = hero_name
+        print "**********", hero_name, "**********"
         anchors = ml30.find_all('a', href=re.compile("deckbuilder"))
         decks = []
         for a in anchors:
@@ -89,23 +90,38 @@ def fetch_main_index():
     return heros
 
 def parse_cards(url):
-    cards = []
     if url.find(r'#^'):
-        #We can fetch data in index page.
-        ts = url.split(r'&')[1:]
-        for x in ts:
-            card = {}
-            xs = x.strip().split(r'.')
-            card['id'] = xs[0]
-            card['count'] = xs[1]
-            cards.append(card)
+        cards = parse_url(url)
     else:
-        #Should enter into detail page and dig data again.
-        pass
+        href = parse_detail_cards_url(url)
+        cards = parse_url(href)
 
     return cards
-    
 
+def parse_detail_cards_url(url):
+    #Should enter into detail page and dig data again.
+    bs = get_encoded_page(url)
+    href = bs.find("a", href=re.compile("deckbuilder.*#\^\d&"))['href']
+    if not url.find(r'#^'):
+        raise Exception("url %s can't be parsed" % url)
+
+    return href
+
+    
+def parse_url(url):
+    #We can fetch data in index page.
+    cards = []
+    ts = url.split(r'&')[1:]
+    for x in ts:
+        card = {}
+        xs = x.strip().split(r'.')
+        id = xs[0].strip().replace("\r", "").replace("\n", "")
+        id = str(int(id))
+        card['id'] = id
+        card['count'] = xs[1]
+        cards.append(card)
+        
+    return cards
 
 if __name__ == "__main__":
     manager.run()

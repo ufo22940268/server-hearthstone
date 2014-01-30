@@ -26,7 +26,10 @@ lint:
 	flake8 --exclude=env .
 
 test:
-	py.test tests -s
+	py.test tests -sx
 
 test-all:
-	py.test tests -s --runslow
+	py.test tests -sx --runslow
+
+test-single:
+	py.test tests -sx --runslow -m single

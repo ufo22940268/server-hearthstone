@@ -44,7 +44,7 @@ class TestURLs:
 
 class TestAPIs:
     def test_hero_deck(self):
-        result = get_result('/hero_deck', {'name': u'猎人'.encode('utf-8')})
+        result = get_result('/hero_deck', {'name': u'法师'.encode('utf-8')})
         assert len(result) > 0
         first = result[0]
         
@@ -53,3 +53,4 @@ class TestAPIs:
 
         card = first.get('cards')[0]
         assert card['pic']
+        assert card['name']
