@@ -36,7 +36,9 @@ class HeroDeck(Resource):
         for cs in [d['cards'] for d in decks]:
             for c in cs:
                 self.setup_card(c)
-        
+
+            cs.sort(cmp=lambda x, y: cmp(int(x['mana']), int(y['mana'])))
+            
         return decks
 
     def setup_card(self, c):
@@ -45,6 +47,7 @@ class HeroDeck(Resource):
             raise Exception("card_id %s not founded in card collection" % c['id'])
         c['pic'] = card['picurl']
         c['name'] = card['name']
+        c['mana'] = card['mana']
         
 def register(api):
     api.add_resource(HeroDeck, '/hero_deck')

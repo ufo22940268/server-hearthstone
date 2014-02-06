@@ -54,3 +54,8 @@ class TestAPIs:
         card = first.get('cards')[0]
         assert card['pic']
         assert card['name']
+
+        for one in result:
+            cards = one.get('cards')
+            for i in range(len(cards) - 1):
+                assert cards[i]['mana'] <= cards[i + 1]['mana']
