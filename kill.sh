@@ -7,4 +7,4 @@
 #
 
 # ps -aux | grep gunicorn | grep 20010 | awk '{print $2}' | xargs -r kill
-ps -aux | grep gunicorn | grep 30010 | awk '{print $2}' | xargs -r kill
+ps -aux | grep manage.py | grep 30010 | awk '{print $2}' | xargs -r kill
