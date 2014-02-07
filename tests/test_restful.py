@@ -59,3 +59,12 @@ class TestAPIs:
             cards = one.get('cards')
             for i in range(len(cards) - 1):
                 assert cards[i]['mana'] <= cards[i + 1]['mana']
+
+    def test_hero_secret(self):
+        result = get_result('/hero_secret', {'name': u'法师'.encode('utf-8')})
+        assert len(result) > 0
+        first = result[0]
+
+        assert first['_id']
+        assert first['name']
+        assert first['picurl']

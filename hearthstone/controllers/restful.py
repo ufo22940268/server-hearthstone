@@ -48,6 +48,18 @@ class HeroDeck(Resource):
         c['pic'] = card['picurl']
         c['name'] = card['name']
         c['mana'] = card['mana']
+
+class HeroSecret(Resource):
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=unicode, required=True)
+        args = parser.parse_args()
+        hero_name = args['name']
+        cards = mongo.db.card.find({'class': hero_name, 'effect': 'Secret'})
+        cards = cursor_to_dict(cards)
+        return cards
         
 def register(api):
     api.add_resource(HeroDeck, '/hero_deck')
+    api.add_resource(HeroSecret, '/hero_secret')
